@@ -80,7 +80,7 @@ namespace EasyUI.WPF.Combobox
             }
         }
 
-        public IEnumerable<Object> EasyItemSource
+        public IEnumerable<Object> OriginalSource
         {
             get { return (IEnumerable<Object>)GetValue(EasyItemSourceProperty); }
             set { SetValue(EasyItemSourceProperty, value); }
@@ -88,14 +88,13 @@ namespace EasyUI.WPF.Combobox
 
         // Using a DependencyProperty as the backing store for ItemSource.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty EasyItemSourceProperty =
-            DependencyProperty.Register("EasyItemSource", typeof(IEnumerable<Object>), typeof(SearchCombobox), new PropertyMetadata(null, new PropertyChangedCallback(OnEasyItemSourceChanged)));
+            DependencyProperty.Register("OriginalSource", typeof(IEnumerable<Object>), typeof(SearchCombobox), new PropertyMetadata(null, new PropertyChangedCallback(OnOriginalSourceChanged)));
 
-        private static void OnEasyItemSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnOriginalSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var x = d as SearchCombobox;
-            if (x != null)
+            if (d is SearchCombobox x)
             {
-                x.ItemsSource = x.EasyItemSource;
+                x.ItemsSource = x.OriginalSource;
             }
         }
 
@@ -103,12 +102,16 @@ namespace EasyUI.WPF.Combobox
         {
             base.OnApplyTemplate();
             keyWords = GetTemplateChild(ElementContentTextBox) as TextBox;
-            var bindChinese = new Binding("KeyWords");
-            bindChinese.Source = this;
-            bindChinese.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-            bindChinese.Mode = BindingMode.TwoWay;
-            keyWords.SetBinding(TextBox.TextProperty, bindChinese);
-            //keyWords.TextChanged += KeyWords_TextChanged; ;
+            if (keyWords != null)
+            {
+                var bindChinese = new Binding("KeyWords")
+                {
+                    Source = this,
+                    UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged,
+                    Mode = BindingMode.TwoWay
+                };
+                keyWords.SetBinding(TextBox.TextProperty, bindChinese);
+            }
         }
 
         public CornerRadius CornerRadius
@@ -143,12 +146,11 @@ namespace EasyUI.WPF.Combobox
 
         private static void OnTextPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var x = d as SearchCombobox;
-            if (x != null)
+            if (d is SearchCombobox x)
             {
-                if (x.EasyItemSource != null)
+                if (x.OriginalSource != null)
                 {
-                    var tt = from p in x.EasyItemSource where p.GetType().GetProperty(x.DisplayMemberPath).GetValue(p).ToString().Contains(x.KeyWords) select p;
+                    var tt = from p in x.OriginalSource where p.GetType().GetProperty(x.DisplayMemberPath).GetValue(p).ToString().Contains(x.KeyWords) select p;
                     x.ItemsSource = tt;
                 }
             }

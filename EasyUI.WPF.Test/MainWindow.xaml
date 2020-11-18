@@ -9,7 +9,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
 
-        <Combobox:SearchCombobox HorizontalAlignment="Left" Height="100" Margin="203,79,0,0" VerticalAlignment="Top" Width="100"/>
+        <Combobox:SearchCombobox HorizontalAlignment="Left"  IsEditable="True"  x:Name="aaa" Margin="203,79,0,0" VerticalAlignment="Top"  />
 
     </Grid>
 </Window>

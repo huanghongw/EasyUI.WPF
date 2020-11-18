@@ -23,6 +23,22 @@ namespace EasyUI.WPF.Test
         public MainWindow()
         {
             InitializeComponent();
+            List< aaaa> a = new List<aaaa>()
+            {
+                new aaaa(){ Key="a",Value="av"},
+                new aaaa(){ Key="b",Value="bv"},
+                new aaaa(){ Key="c",Value="cv"}
+                 
+            };
+            aaa.OriginalSource = a;
+            aaa.DisplayMemberPath = "Key";
+        }
+
+        public class aaaa
+        {
+            public string Key { get; set; }
+
+            public string Value { get; set; }
         }
     }
 }

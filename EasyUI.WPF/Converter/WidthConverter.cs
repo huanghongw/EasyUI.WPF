@@ -31,4 +31,27 @@ namespace EasyUI.WPF.Converter
         }
     }
 
+    public class ParamSubWidthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double apr = 0;
+            if (parameter == null)
+            {
+
+            }
+            else
+            {
+                double.TryParse(parameter.ToString(), out apr);
+            }
+            var isInverse = int.Parse(value.ToString());
+            return int.Parse((isInverse - apr).ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }

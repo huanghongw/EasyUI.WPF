@@ -26,11 +26,9 @@ namespace EasyUI.WPF.Popups
         }
         private static void OnPreviewGotKeyboardFocus(Object sender, KeyboardFocusChangedEventArgs e)
         {
-            var textBox = e.NewFocus as TextBoxBase;
-            if (textBox != null)
+            if (e.NewFocus is TextBoxBase textBox)
             {
-                var hwndSource = PresentationSource.FromVisual(textBox) as HwndSource;
-                if (hwndSource != null)
+                if (PresentationSource.FromVisual(textBox) is HwndSource hwndSource)
                 {
                     SetActiveWindow(hwndSource.Handle);
                 }
