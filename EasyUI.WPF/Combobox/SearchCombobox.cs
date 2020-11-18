@@ -82,12 +82,12 @@ namespace EasyUI.WPF.Combobox
 
         public IEnumerable<Object> OriginalSource
         {
-            get { return (IEnumerable<Object>)GetValue(EasyItemSourceProperty); }
-            set { SetValue(EasyItemSourceProperty, value); }
+            get { return (IEnumerable<Object>)GetValue(OriginalSourceProperty); }
+            set { SetValue(OriginalSourceProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for ItemSource.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty EasyItemSourceProperty =
+        public static readonly DependencyProperty OriginalSourceProperty =
             DependencyProperty.Register("OriginalSource", typeof(IEnumerable<Object>), typeof(SearchCombobox), new PropertyMetadata(null, new PropertyChangedCallback(OnOriginalSourceChanged)));
 
         private static void OnOriginalSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

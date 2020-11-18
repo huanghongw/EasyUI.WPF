@@ -5,24 +5,27 @@
                     xmlns:local="clr-namespace:EasyUI.WPF.Combobox">
     <converter:NotNullToVisiblity x:Key="tovisb"></converter:NotNullToVisiblity>
     <converter:ParamSubWidthConverter x:Key="subwid"></converter:ParamSubWidthConverter>
-    <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="40" />
-            </Grid.ColumnDefinitions>
-            <Border
+    <Style TargetType="ToggleButton" x:Key="ComboxStyleBtn">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="40" />
+                        </Grid.ColumnDefinitions>
+                        <Border
                 x:Name="bd"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Background="White"
                 BorderBrush="#D6D8DE"
-                BorderThickness="1"
+                BorderThickness="0"
                 CornerRadius="3"
                 Cursor="Hand" />
 
-            <!--<Border Grid.Column="1" Background="#e8e8e8" Cursor="Hand" />-->
-            <Path
+                        <!--<Border Grid.Column="1" Background="#e8e8e8" Cursor="Hand" />-->
+                        <Path
                 x:Name="Arrow"
                 Grid.Column="1"
                 Height="10"
@@ -32,164 +35,41 @@
                 Data="M 0 0 L 4 4 L 8 0 Z"
                 Fill="#cccccc"
                 Stretch="Fill" />
-        </Grid>
-        <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="True">
-                <Setter TargetName="bd" Property="BorderBrush" Value="#BDBFC5" />
-                <Setter TargetName="Arrow" Property="Fill" Value="#777777"></Setter>
-            </Trigger>
-        </ControlTemplate.Triggers>
-    </ControlTemplate>
-
-
-    <Style TargetType="{x:Type local:SearchCombobox}">
-        <Setter Property="Height" Value="35"></Setter>
-        <Setter Property="Width" Value="250"> </Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:SearchCombobox}">
-                    <Grid>
-                        <!--  ToggleButton 已数据绑定到 ComboBox 本身以切换 IsDropDownOpen  -->
-                        <ToggleButton
-                            x:Name="ToggleButton"
-                            Grid.Column="2"
-                            ClickMode="Press"
-                            Focusable="false"
-                            IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                           Template="{StaticResource ComboBoxToggleButton}"  />
-                        <ContentPresenter Margin="6"
-                            x:Name="ContentSite"
-                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                            VerticalAlignment="Center" 
-                            Content="{TemplateBinding SelectionBoxItem}"
-                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                            IsHitTestVisible="False" />
-
-                        <!--  必须将 TextBox 命名为 PART_EditableTextBox，否则 ComboBox 将无法识别它  -->
-                        <TextBox
-                            x:Name="PART_EditableTextBox"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Background="Transparent"
-                            Focusable="True"
-                            IsReadOnly="{TemplateBinding IsReadOnly}"
-                            Style="{x:Null}" Width="{TemplateBinding Width}"
-                            Template="{DynamicResource ComboBoxTextBox}"
-                            Visibility="Hidden" />
-
-                        <!--  Popup 可显示 ComboBox 中的项列表。IsOpen 已数据绑定到通过 ComboBoxToggleButton 来切换的 IsDropDownOpen  -->
-                        <popup:EasyPopup
-                            x:Name="PART_Popup"
-                            AllowsTransparency="True"
-                            Focusable="False"
-                            IsOpen="{TemplateBinding IsDropDownOpen}"
-                            Placement="Bottom"
-                            PopupAnimation="Slide">
-                            <Grid
-                                x:Name="DropDown"
-                                MinWidth="{TemplateBinding ActualWidth}"
-                                MaxHeight="{TemplateBinding MaxDropDownHeight}"
-                                SnapsToDevicePixels="True">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Border Grid.RowSpan="2"  BorderThickness="1" BorderBrush="#CCCCCC" Width="{TemplateBinding Width}" Background="White" CornerRadius="3"></Border>
-                                <!--<StackPanel>-->
-                                <TextBox  Margin="6" Grid.Row="0" Height="{TemplateBinding Height}"  Name="PART_ContentTextBox" VerticalContentAlignment="Center" Width="{TemplateBinding Width, Converter={StaticResource subwid},ConverterParameter=12}"  Background="White"    ></TextBox>
-                                <TextBlock x:Name="_txtWater"  Grid.Row="0" FontFamily="Italic" IsHitTestVisible="False" 
-                                           Margin="9" VerticalAlignment="Center" Foreground="#9f9f9f"  Text="输入筛选条件"  Width="{TemplateBinding Width, Converter={StaticResource subwid},ConverterParameter=18}"  Visibility="{Binding Text,ElementName=PART_ContentTextBox,Converter={StaticResource tovisb}}" Grid.Column="0"/>
-                                <!--</StackPanel>-->
-                                <!--<Border
-                                    x:Name="DropDownBorder"
-                                    Background="White"
-                                    BorderBrush="#D6D8DE"
-                                    BorderThickness="1"
-                                    CornerRadius="3" Grid.Row="1" />-->
-                                <!--  Background="{DynamicResource WindowBackgroundBrush}"  -->
-                                <!--  BorderBrush="{DynamicResource SolidBorderBrush}"  -->
-                                <ScrollViewer 
-                                    Margin="6" Grid.Row="1"
-                                    CanContentScroll="True"
-                                    HorizontalScrollBarVisibility="Auto"
-                                    SnapsToDevicePixels="True"
-                                    Style="{DynamicResource SimpleScrollViewer}"
-                                    VerticalScrollBarVisibility="Auto">
-                                    <!--  StackPanel 用于显示子级，方法是将 IsItemsHost 设置为 True  -->
-                                    <StackPanel
-                                        Background="White"
-                                        IsItemsHost="True"
-                                        KeyboardNavigation.DirectionalNavigation="Contained" />
-                                </ScrollViewer>
-
-                            </Grid>
-                        </popup:EasyPopup>
                     </Grid>
-                    <!--<ControlTemplate.Triggers>
-                        <Trigger Property="IsEditable" Value="True">
-                            <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"></Setter>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="#BDBFC5" />
+                            <Setter TargetName="Arrow" Property="Fill" Value="#777777"></Setter>
                         </Trigger>
-                    </ControlTemplate.Triggers>-->
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="ItemContainerStyle" >
+    </Style>
+    <Style TargetType="{x:Type local:SearchCombobox}" >
+        <Style.Resources>
+            <converter:ParamWidthConverter x:Key="parw"></converter:ParamWidthConverter>
+        </Style.Resources>
+        <Setter Property="Width" Value="250"></Setter>
+        <Setter Property="Height" Value="35"></Setter>
+        <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <!--ComBoxItem-->
                 <Style TargetType="ComboBoxItem">
-                    <Setter Property="SnapsToDevicePixels" Value="True" />
-                    <Setter Property="Padding" Value="4,1" />
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderBrush" Value="Transparent" />
-                    <Setter Property="BorderThickness" Value="1" />
                     <Setter Property="Width" Value="Auto"></Setter>
-                    <Setter Property="FocusVisualStyle">
-                        <Setter.Value>
-                            <Style>
-                                <Setter Property="Control.Template">
-                                    <Setter.Value>
-                                        <ControlTemplate>
-                                            <Rectangle
-                                    Margin="2"
-                                    SnapsToDevicePixels="True"
-                                    Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
-                                    StrokeDashArray="1 2"
-                                    StrokeThickness="1" />
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </Setter.Value>
-                    </Setter>
-
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ComboBoxItem">
-                                <Border
-                        x:Name="Bd"
-                             Height="{Binding Height,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:SearchCombobox}}"       
-                        Padding="{TemplateBinding Padding}"
-                        Background="WhiteSmoke"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        SnapsToDevicePixels="True">
-                                    <ContentPresenter ToolTip="{TemplateBinding Content}" 
-                                                      VerticalAlignment="Center" 
-                                                      HorizontalAlignment="Left" 
-                                                      Margin="5,0,0,0">
+                                <Border Name="Back"  Background="Transparent" Margin="2"  BorderThickness="0,0,0,0" BorderBrush="#81D779" >
+                                    <ContentPresenter ToolTip="{TemplateBinding Content}"  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0">
                                     </ContentPresenter>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter TargetName="Bd" Property="Background" Value="#E7F5FF" />
-                                        <Setter Property="Foreground" Value="#29A3F4" />
+                                        <Setter TargetName="Back" Property="Background" Value="LightGray"></Setter>
                                     </Trigger>
-                                    <Trigger Property="IsSelected" Value="False">
-                                        <Setter Property="Foreground" Value="Black" />
-                                    </Trigger>
-                                    <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Bd" Property="Background" Value="#E7F5FF" />
+                                    <Trigger Property="IsHighlighted" Value="True">
+                                        <Setter TargetName="Back" Property="Background" Value="LightGray"></Setter>
                                     </Trigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
@@ -198,9 +78,74 @@
                 </Style>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-           
-        </Style.Triggers>
+        <Setter Property="BorderBrush" Value="#D6D6D6"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:SearchCombobox}">
+                    <Border BorderThickness="1"   BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="{TemplateBinding CornerRadius}" Padding="0,0,5,0" Background="#FFFFFF">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80*"/>
+                                <ColumnDefinition Width="20*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox  Grid.Column="0" BorderThickness="0"   Padding="2" Width="{Binding ActualWidth,RelativeSource={RelativeSource Mode=FindAncestor,AncestorLevel=1,AncestorType=local:SearchCombobox},Converter={StaticResource parw},ConverterParameter=0.8}" ToolTip="{TemplateBinding Text}" Text="{TemplateBinding Text}" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBox>
+
+                            <Border Grid.Column="1" BorderThickness="0" BorderBrush="#81D779" CornerRadius="{TemplateBinding CornerRadius}">
+                                <ToggleButton Style="{StaticResource ComboxStyleBtn}" IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"></ToggleButton>
+                            </Border>
+                            <popup:EasyPopup
+                            x:Name="PART_Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            Placement="Bottom"
+                            PopupAnimation="Slide">
+                                <Grid
+                                x:Name="DropDown"
+                                MinWidth="{TemplateBinding ActualWidth}"
+                                MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                SnapsToDevicePixels="True">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Border Grid.RowSpan="2"  BorderThickness="1" BorderBrush="#CCCCCC" Width="{TemplateBinding Width}" Background="White" CornerRadius="3"></Border>
+                                    <!--<StackPanel>-->
+                                    <TextBox  Margin="6" Grid.Row="0" Height="{TemplateBinding Height}"  Name="PART_ContentTextBox" VerticalContentAlignment="Center" Width="{TemplateBinding Width, Converter={StaticResource subwid},ConverterParameter=12}"  Background="White"    ></TextBox>
+                                    <TextBlock x:Name="_txtWater"  Grid.Row="0" FontFamily="Italic" IsHitTestVisible="False" 
+                                           Margin="9" VerticalAlignment="Center" Foreground="#9f9f9f"  Text="输入筛选条件"  Width="{TemplateBinding Width, Converter={StaticResource subwid},ConverterParameter=18}"  Visibility="{Binding Text,ElementName=PART_ContentTextBox,Converter={StaticResource tovisb}}" Grid.Column="0"/>
+                                    <!--</StackPanel>-->
+                                    <!--<Border
+                                    x:Name="DropDownBorder"
+                                    Background="White"
+                                    BorderBrush="#D6D8DE"
+                                    BorderThickness="1"
+                                    CornerRadius="3" Grid.Row="1" />-->
+                                    <!--  Background="{DynamicResource WindowBackgroundBrush}"  -->
+                                    <!--  BorderBrush="{DynamicResource SolidBorderBrush}"  -->
+                                    <ScrollViewer 
+                                    Margin="2" Grid.Row="1"
+                                    CanContentScroll="True"
+                                    HorizontalScrollBarVisibility="Auto"
+                                    SnapsToDevicePixels="True"
+                                    Style="{DynamicResource SimpleScrollViewer}"
+                                    VerticalScrollBarVisibility="Auto">
+                                        <!--  StackPanel 用于显示子级，方法是将 IsItemsHost 设置为 True  -->
+                                        <StackPanel
+                                        Background="White"
+                                        IsItemsHost="True"
+                                        KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+
+                                </Grid>
+                            </popup:EasyPopup>
+                        </Grid>
+                    </Border>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
     </Style>
 
 </ResourceDictionary>
