@@ -94,5 +94,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EasyUI.WPF\EasyUI.WPF.csproj">
+      <Project>{4e31f963-3425-4d26-9f36-91dc7ad45d54}</Project>
+      <Name>EasyUI.WPF</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
